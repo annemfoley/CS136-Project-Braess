@@ -13,8 +13,8 @@ class Network:
 
     def __init__(self):
         self.graph = defaultdict(list) # Array list of all edges, edge (u,v) is a string pair
-        self.source = Vertex('s',True,False) # network source
-        self.sink = Vertex('s',False,True) # network sink
+        self.source = Vertex('src',True,False) # network source
+        self.sink = Vertex('sink',False,True) # network sink
         self.vertices = [self.source,self.sink] # list of existing vertices
 
         self.costs = dict() # Cost along edge, stored (alpha,beta) pairs where cost is calculated alpha*x+beta
@@ -89,18 +89,32 @@ class Network:
         return cost
 
 
+    def displayNetwork(self):
+        if self.checkNetwork()==False:
+            print("Invalid network, cannot display")
+        edges = self.generate_edges()
+        print("Network state:")
+        for (u,v) in edges:
+            print("\t"+u.string+" -> "+v.string,"\tagents: "+str(self.flows[(u,v)]),"\tcost: "+str(self.costs[(u,v)]))
+        print()
+
+
     # Use BFS to make sure this is a valid network
     #   i.e. all vertices should point to the sink
     # idk if this actually works, from geeksforgeeks
-    def checkNetwork(self):
+    def checkNetwork(self,debug=False):
 
         # Check source and sink are actually a source and sink
         for v in self.vertices:
             if self.source in self.getNextVertices(v):
-                print("Cannot have vertex pointing to source")
+                if debug:
+                    print("Invalid network")
+                    print("Cannot have vertex pointing to source")
                 return False
         if self.getNextVertices(self.sink):
-            print("Cannot have the sink point to another vertex")
+            if debug:
+                print("Invalid network")
+                print("Cannot have the sink point to another vertex")
             return False
 
 
@@ -124,7 +138,9 @@ class Network:
             # if this vertex has no more edges, check it's a sink
             if len(self.getNextVertices(s))==0:
                 if not s.sink:
-                    print("Cannot end on non-sink")
+                    if debug:
+                        print("Invalid network")
+                        print("Cannot end on non-sink")
                     return False
  
             # Get all adjacent vertices of the
@@ -136,4 +152,13 @@ class Network:
                     queue.append(i)
                     visited[i] = True
 
+        for v in self.vertices:
+            if not visited[v]:
+                if debug:
+                    print("Invalid network")
+                    print("Cannot have unreachable vertex from source")
+                return False
+
+        if debug:
+            print("Network passed!")
         return True
