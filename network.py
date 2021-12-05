@@ -63,7 +63,7 @@ class Network:
     # Set the flow along an edge
     def setFlow(self,u,v,x):
         if v in self.graph[u]:
-            self.costs[(u,v)]=x
+            self.flows[(u,v)]=x
         else:
             print("No edge",(u,v))
 
