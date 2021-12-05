@@ -18,7 +18,6 @@ def main():
 
     # test validity of network and display
     network.checkNetwork(debug=True)
-    network.displayNetwork()
 
     
     # make sure to generate paths from source to sink

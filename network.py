@@ -81,7 +81,7 @@ class Network:
         return self.costs[(u,v)][0] * self.flows[(u,v)] + self.costs[(u,v)][1]
 
     # Calculate total cost of current congestion
-    def calcTotalCost(self,u,v):
+    def calcTotalCost(self):
         # return sum over edges (edge cost * flow along edge)
         cost = 0
         edges = self.generate_edges()
@@ -106,8 +106,6 @@ class Network:
         # If current vertex is same as destination, then print
         # current path[]
         if u == d:
-            for vertex in path:
-                print(vertex.string)
             self.paths.append(self.convertVerticesToEdges(path))
         else:
             # If current vertex is not destination
@@ -141,7 +139,7 @@ class Network:
     def getCostAlongPath(self,path):
         cost = 0
         for edge in path:
-            cost += self.costs[(edge[0], edge[1])]
+            cost += self.getEdgeCost(edge[0], edge[1])
         return cost
     
 
@@ -158,12 +156,23 @@ class Network:
 
 
     def displayNetwork(self):
+        # check network is valid
         if self.checkNetwork()==False:
             print("Invalid network, cannot display")
+        
+        # display edges
         edges = self.generate_edges()
         print("Network state:")
         for (u,v) in edges:
             print("\t"+u.string+" -> "+v.string,"\tagents: "+str(self.flows[(u,v)]),"\tcost/agent: "+str(self.getEdgeCost(u,v)))
+        
+        # display paths
+        print("\nPaths from src to sink:")
+        for p in self.paths:
+            for e in p:
+                print(e[0].string + " -> ",end="")
+                if e[1]==self.sink:
+                    print(e[1].string)
         print()
 
 
