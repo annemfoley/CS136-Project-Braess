@@ -17,7 +17,7 @@ class Network:
         self.sink = Vertex('sk',False,True) # network sink
         self.vertices = [self.source,self.sink] # list of existing vertices
         self.paths = []
-
+        self.pathFlows = []
         self.costs = dict() # Cost along edge, stored (alpha,beta) pairs where cost is calculated alpha*x+beta
         self.flows = dict() # Flow along any edge, i.e. the number of agents taking that edge
 
@@ -77,8 +77,8 @@ class Network:
 
     # Calculate the cost to a single agent from edge (u,v)
     def getEdgeCost(self,u,v):
-        # return alpha * x + beta
-        return self.costs[(u,v)][0] * self.flows[(u,v)] + self.costs[(u,v)][1]
+        # return alpha + beta * x
+        return self.costs[(u,v)][0] + self.flows[(u,v)] * self.costs[(u,v)][1]
 
     # Calculate total cost of current congestion
     def calcTotalCost(self):
@@ -133,6 +133,7 @@ class Network:
  
         # Call the recursive helper function to print all paths
         self.getAllPathsUtil(s, d, visited, path)
+        self.pathFlows = [0 for i in range(len(self.paths))]
     
 
     # helper function
@@ -142,18 +143,19 @@ class Network:
             cost += self.getEdgeCost(edge[0], edge[1])
         return cost
     
-
     # add an agent taking this path
     def addOneToPath(self,path):
         for edge in path:
             self.incrementFlow(edge[0], edge[1])
-
+        index = self.paths.index(path)
+        self.pathFlows[index] += 1
 
     # subtract an agent taking this path
     def subtractOneFromPath(self,path):
         for edge in path:
             self.decrementFlow(edge[0], edge[1])
-
+        index = self.paths.index(path)
+        self.pathFlows[index] -= 1
 
     def displayNetwork(self):
         # check network is valid
@@ -175,7 +177,7 @@ class Network:
             for e in p:
                 print(e[0].string + " -> ",end="")
                 if e[1]==self.sink:
-                    print(e[1].string)
+                    print(e[1].string, " flow = ", self.pathFlows[self.paths.index(p)])
         print()
 
 
