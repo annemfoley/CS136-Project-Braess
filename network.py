@@ -13,8 +13,8 @@ class Network:
 
     def __init__(self):
         self.graph = defaultdict(list) # Array list of all edges, edge (u,v) is a string pair
-        self.source = Vertex('src',True,False) # network source
-        self.sink = Vertex('sink',False,True) # network sink
+        self.source = Vertex('sr',True,False) # network source
+        self.sink = Vertex('sk',False,True) # network sink
         self.vertices = [self.source,self.sink] # list of existing vertices
         self.paths = []
 
@@ -164,8 +164,11 @@ class Network:
         edges = self.generate_edges()
         print("Network state:")
         for (u,v) in edges:
-            print("\t"+u.string+" -> "+v.string,"\tagents: "+str(self.flows[(u,v)]),"\tcost/agent: "+str(self.getEdgeCost(u,v)))
+            print("\t"+u.string+" --> "+v.string,
+            "\tagents: "+str(self.flows[(u,v)]),
+            "\tcost/agent: "+str(self.getEdgeCost(u,v)))
         
+
         # display paths
         print("\nPaths from src to sink:")
         for p in self.paths:

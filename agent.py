@@ -8,7 +8,7 @@ class Agent:
         self.network = network
 
     # find the path that would result in lowest cost and take it
-    def setBestPath(self):
+    def setBestPath(self,debug=False):
 
         # "reset" ourself to the source
         #   i.e. if we are currently on a path, take ourself off
@@ -37,7 +37,8 @@ class Agent:
     def updateAndCheckChanged(self,debug=False):
         old_path = self.path
         self.setBestPath()
-        if old_path == self.path:
+        if old_path == self.path: # we did not change our best path
             return False
+        # else we did change
         return True
         
