@@ -10,7 +10,9 @@ def main():
     network.addEdge(network.source,b)
     network.addEdge(a,network.sink)
     network.addEdge(b,network.sink)
+    network.addEdge(a, b)
     network.getAllPaths(network.source, network.sink)
+    print(network.getCostAlongPath(network.paths[0]))
 
     #print(network.generate_edges())
     network.checkNetwork()
