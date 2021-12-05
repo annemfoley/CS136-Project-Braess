@@ -16,7 +16,7 @@ class Network:
         self.source = Vertex('src',True,False) # network source
         self.sink = Vertex('sink',False,True) # network sink
         self.vertices = [self.source,self.sink] # list of existing vertices
-        self.paths = self.getAllPaths() # generate all paths from source to sink
+        self.paths = []
 
         self.costs = dict() # Cost along edge, stored (alpha,beta) pairs where cost is calculated alpha*x+beta
         self.flows = dict() # Flow along any edge, i.e. the number of agents taking that edge
@@ -88,24 +88,73 @@ class Network:
         for (u,v) in edges:
             cost += self.getEdgeCost(u,v) * self.flows[(u,v)]
         return cost
+    
+    def convertVerticesToEdges(self, path):
+        edgesPath = []
+        for i in range(len(path)):
+            if i < len(path) - 1:
+                edgesPath.append((path[i], path[i+1]))
+        return edgesPath
+
+
+    def getAllPathsUtil(self, u, d, visited, path):
+
+        # Mark the current node as visited and store in path
+        visited[u]= True
+        path.append(u)
+ 
+        # If current vertex is same as destination, then print
+        # current path[]
+        if u == d:
+            for vertex in path:
+                print(vertex.string)
+            self.paths.append(self.convertVerticesToEdges(path))
+        else:
+            # If current vertex is not destination
+            # Recur for all the vertices adjacent to this vertex
+            for i in self.graph[u]:
+                if visited[i] == False:
+                    self.getAllPathsUtil(i, d, visited, path)
+                     
+        # Remove current vertex from path[] and mark it as unvisited
+        path.pop()
+        visited[u]= False
+  
 
     # paths in the form [(src,a),(a,b),(b,c),(c,sink)]
     #   returns a list of paths
-    def getAllPaths(self):
+    def getAllPaths(self, s, d):
+ 
+        # Mark all the vertices as not visited
+        visited = {}
+        for vertex in self.vertices:
+            visited[vertex] = False
+
+        # Create an array to store paths
+        path = []
+ 
+        # Call the recursive helper function to print all paths
+        self.getAllPathsUtil(s, d, visited, path)
     
 
     # helper function
     def getCostAlongPath(self,path):
-
-
-    # get current path with lowest cost
-    def getLowerstCostPath(self):
+        cost = 0
+        for edge in path:
+            cost += self.cost[(edge[0], edge[1])]
+        return cost
+    
 
     # add an agent taking this path
     def addOneToPath(self,path):
+        for edge in path:
+            self.incrementFlow(edge[0], edge[1])
+
 
     # subtract an agent taking this path
     def subtractOneFromPath(self,path):
+        for edge in path:
+            self.decrementFlow(edge[0], edge[1])
 
 
     def displayNetwork(self):
