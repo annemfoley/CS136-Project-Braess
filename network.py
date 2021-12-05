@@ -141,7 +141,7 @@ class Network:
     def getCostAlongPath(self,path):
         cost = 0
         for edge in path:
-            cost += self.cost[(edge[0], edge[1])]
+            cost += self.getEdgeCost(edge[0], edge[1])
         return cost
     
 
