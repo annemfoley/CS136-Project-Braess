@@ -63,7 +63,7 @@ class Network:
     # Set the flow along an edge
     def setFlow(self,u,v,x):
         if v in self.graph[u]:
-            self.costs[(u,v)]=x
+            self.flows[(u,v)]=x
         else:
             print("No edge",(u,v))
 
@@ -141,7 +141,7 @@ class Network:
     def getCostAlongPath(self,path):
         cost = 0
         for edge in path:
-            cost += self.cost[(edge[0], edge[1])]
+            cost += self.costs[(edge[0], edge[1])]
         return cost
     
 
