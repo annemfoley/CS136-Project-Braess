@@ -16,6 +16,7 @@ class Network:
         self.source = Vertex('src',True,False) # network source
         self.sink = Vertex('sink',False,True) # network sink
         self.vertices = [self.source,self.sink] # list of existing vertices
+        self.paths = self.getAllPaths() # generate all paths from source to sink
 
         self.costs = dict() # Cost along edge, stored (alpha,beta) pairs where cost is calculated alpha*x+beta
         self.flows = dict() # Flow along any edge, i.e. the number of agents taking that edge
@@ -88,6 +89,24 @@ class Network:
             cost += self.getEdgeCost(u,v) * self.flows[(u,v)]
         return cost
 
+    # paths in the form [(src,a),(a,b),(b,c),(c,sink)]
+    #   returns a list of paths
+    def getAllPaths(self):
+    
+
+    # helper function
+    def getCostAlongPath(self,path):
+
+
+    # get current path with lowest cost
+    def getLowerstCostPath(self):
+
+    # add an agent taking this path
+    def addOneToPath(self,path):
+
+    # subtract an agent taking this path
+    def subtractOneFromPath(self,path):
+
 
     def displayNetwork(self):
         if self.checkNetwork()==False:
@@ -95,7 +114,7 @@ class Network:
         edges = self.generate_edges()
         print("Network state:")
         for (u,v) in edges:
-            print("\t"+u.string+" -> "+v.string,"\tagents: "+str(self.flows[(u,v)]),"\tcost: "+str(self.costs[(u,v)]))
+            print("\t"+u.string+" -> "+v.string,"\tagents: "+str(self.flows[(u,v)]),"\tcost/agent: "+str(self.getEdgeCost(u,v)))
         print()
 
 
